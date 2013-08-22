@@ -1,0 +1,1 @@
+This repo contains functions used for downloading data from biodiversity databases. Currently only GBIF and SIB are supported.
