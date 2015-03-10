@@ -35,11 +35,21 @@ Más información
 http://www.r-bloggers.com/installing-the-rmysql-package-on-windows-7/
 
 ###Instrucciones de instalación de base de datos Catalogue of Life
+Dado que el proceso de instalación de la la base de datos requiere algunas precisiones técnicas planteamos dos opciones que han funcionado en el laboratorio.
+
+Opción 1:
+
  1. Abra el programa MySQL 5.5 Command Line Client
  2. Ingrese la contraseña utilizada en la instalación de MySQL. 
  3. Para crear la base de datos Catalogue of Life, escriba el comando create database col2012ac; (incluyendo el punto y coma).  Puede verificar que la base de datos fue agregada escribiendo el comando show databases;
  4. Obtenga una copia de la base de datos de Catalogue of Life en el laboratorio de biogeografía. Cópiela a una ubicación permanente en su PC.
  5. Para indexar la base de datos de Catalogue of Life en MySQL, abra el programa cmd.exe (en Windows 7 lo puede buscar en el menú de inicio) e ingrese cmd mysql -u root -p col2012ac < d:data/bases/col2012ac.sql, cambiando la última porción del comando con la ruta completa del archivo de Catalogue of Life (col2012ac.sql).
+ 
+Opción 2:
+
+ 1. Descargar la versión 2014 de la base de datos [Catalogue of Life](http://www.catalogueoflife.org/content/annual-checklist-archive) en formato MS Windows Installer. 
+ 2.  Una vez descargado y ejecutado el contenido del archivo .zip se extraeran archivos formato MYI y MYD entre otros. Estos archivos deben ser movidos al directorio *C:/ProgramData/MySQL/MySQL Server 5.5/data* dentro de la carpeta *col2014ac*. Esto permitirá que MySQL actualize automáticamente su conexión a la base de datos.
+
 
 ###Ejemplo de sesión de descarga y verificación taxonómica de registros
 
@@ -69,12 +79,17 @@ Corra la validación taxonómica
 
     #Conectese a la base de datos de Catalogue of Life
     library(RMySQL)
-    con <- dbConnect(dbDriver("MySQL"), user = "root",password="root",dbname = "col2012ac",host="localhost") #Cambie este comando ingresando el nombre de usuario y password asociado con su instalaci�n de MySQL
+    con <- dbConnect(dbDriver("MySQL"), user = "root",password="root",dbname = "col2014ac",host="localhost") #Cambie este comando ingresando el nombre de usuario y password asociado con su instalación de MySQL
+    
     #Genere la tabla de id, nombre,genero y especie (cofTable)
-    species<-db$db$species #The first four lines take the first two strings in the field species and assign them to genus and spp, respectively
-    genus<-sapply(species,function(x) strsplit(x," ")[[1]][1],USE.NAMES=FALSE)
-    spp<-sapply(species,function(x) strsplit(x," ")[[1]][2],USE.NAMES=FALSE)
-    nombre=paste(genus,spp) 
+    species <-db$db$species #The first four lines take the first two strings in the field species and assign them to genus and spp, respectively
+    genus <- sapply(species, function(x) strsplit(x," ")[[1]][1],USE.NAMES=FALSE)
+    spp <- sapply(species,function(x) strsplit(x," ")[[1]][2],USE.NAMES=FALSE)
+    nombre <-  paste(genus,spp) 
     cofTable<-data.frame(id=1:length(species),nombre=nombre,genero=genus,epiteto_especifico=spp)
-    #Realice la verificaci�n de nombres con Catalogue of Life.
-    cofTable2<-nameValidation(con,cofTable)
+    
+    #Realice la verificación de nombres con Catalogue of Life.
+    cofTable2 <- nameValidation(con, cofTable)
+    
+    #Realice la verificación de nombres con Catalogue of Life usando campos LSID y expertos
+    cofTable2 <- nameValidation(con, cofTable)
