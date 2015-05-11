@@ -13,7 +13,7 @@ gbif2<-function (genus=NULL, species = "", ext = NULL, cellid=NULL,geo = TRUE, s
     nodes <- getNodeSet(doc, "//to:TaxonOccurrence")
     if (length(nodes) == 0) 
       return(data.frame())
-    varNames <- c("continent", "country", "stateProvince", 
+    varNames <- c("occurrenceID","continent", "country", "stateProvince", 
                   "county", "locality", "decimalLatitude", "decimalLongitude", 
                   "coordinateUncertaintyInMeters", "maximumElevationInMeters", 
                   "minimumElevationInMeters", "maximumDepthInMeters", 
@@ -156,7 +156,7 @@ gbif2<-function (genus=NULL, species = "", ext = NULL, cellid=NULL,geo = TRUE, s
   }
   d <- as.Date(Sys.time())
   z <- cbind(z, d)
-  names(z) <- c("species", "continent", "country", "adm1", 
+  names(z) <- c("occurrenceID","species", "continent", "country", "adm1", 
                 "adm2", "locality", "lat", "lon", "coordUncertaintyM", 
                 "maxElevationM", "minElevationM", "maxDepthM", "minDepthM", 
                 "institution", "collection", "catalogNumber", "basisOfRecord", 
@@ -192,7 +192,7 @@ gbif2<-function (genus=NULL, species = "", ext = NULL, cellid=NULL,geo = TRUE, s
                        "maxDepthM", "minDepthM")], 1, FUN = altfun)
     if (feedback < 3) 
       options(warn = w)
-    z <- cbind(z[, c("species", "continent", "country", "adm1", 
+    z <- cbind(z[, c("occurrenceID","species", "continent", "country", "adm1", 
                      "adm2", "locality", "lat", "lon", "coordUncertaintyM")], 
                alt, z[, c("institution", "collection", "catalogNumber", 
                           "basisOfRecord", "collector", "earliestDateCollected", 
